@@ -17,14 +17,15 @@ const TodoCard = (props: Props) => {
       sx={{
         p: 2,
         display: "flex",
-        justifyContent: "space-between",
         alignItems: "center",
-        minWidth: 300,
+        minWidth: 500,
       }}
     >
       <Checkbox checked={isDone} onChange={handleChange} />
       <Typography variant="h6">TODO</Typography>
-      <Button type="button">Delete</Button>
+      <Button type="button" sx={{ ml: "auto" }}>
+        Delete
+      </Button>
     </Paper>
   );
 };
