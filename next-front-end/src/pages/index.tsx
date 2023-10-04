@@ -12,8 +12,10 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   const [todo, setTodo] = useState("");
 
-  const addTodo = (event: React.FormEvent<HTMLFormElement>) => {
+  const addTodo = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const res = await fetch("http://localhost:8787/api/todos");
+    console.log("res", res);
     console.log("todo", todo);
     setTodo("");
   };
