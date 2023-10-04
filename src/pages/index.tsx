@@ -33,7 +33,7 @@ export default function Home() {
         <Box
           component={"form"}
           onSubmit={addTodo}
-          sx={{ display: "flex", alignItems: "center" }}
+          sx={{ display: "flex", alignItems: "center", gap: 1, minWidth: 500 }}
         >
           <TextField
             id="outlined-basic"
@@ -42,6 +42,7 @@ export default function Home() {
             variant="outlined"
             value={todo}
             onChange={(e) => setTodo(e.target.value)}
+            sx={{ flexGrow: 1 }}
           />
           <Button variant="contained" type="submit">
             Add

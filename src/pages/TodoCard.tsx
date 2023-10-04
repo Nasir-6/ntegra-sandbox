@@ -22,7 +22,7 @@ const TodoCard = (props: Props) => {
       }}
     >
       <Checkbox checked={isDone} onChange={handleChange} />
-      <Typography variant="h6">TODO</Typography>
+      <Typography variant="h6">Some random todo item</Typography>
       <Button type="button" sx={{ ml: "auto" }}>
         Delete
       </Button>
