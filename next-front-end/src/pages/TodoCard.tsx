@@ -1,12 +1,18 @@
 import { Button, Checkbox, Paper, Typography } from "@mui/material";
 import React, { useState } from "react";
 
-type Props = {
-  id: string;
+type Todo = {
+  id: number;
+  todo: string;
+  isDone: boolean;
 };
 
-const TodoCard = (props: Props) => {
-  const [isDone, setIsDone] = useState(false);
+type Props = {
+  todo: Todo;
+};
+
+const TodoCard = ({ todo }: Props) => {
+  const [isDone, setIsDone] = useState(todo.isDone);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsDone(event.target.checked);
@@ -22,7 +28,7 @@ const TodoCard = (props: Props) => {
       }}
     >
       <Checkbox checked={isDone} onChange={handleChange} />
-      <Typography variant="h6">Some random todo item</Typography>
+      <Typography variant="h6">{todo.todo}</Typography>
       <Button type="button" sx={{ ml: "auto" }}>
         Delete
       </Button>

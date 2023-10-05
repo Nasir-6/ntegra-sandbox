@@ -5,12 +5,25 @@ import styles from "@/styles/Home.module.css";
 import TodoCard from "./TodoCard";
 import TextField from "@mui/material/TextField";
 import { Box, Button, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
+type Todo = {
+  id: number;
+  todo: string;
+  isDone: boolean;
+};
+
 export default function Home() {
   const [todo, setTodo] = useState("");
+  const [todos, setTodos] = useState<Todo[]>([]);
+
+  useEffect(() => {
+    fetch("http://localhost:8787/api/todos")
+      .then((response) => response.json())
+      .then((res) => setTodos(res.data));
+  }, []);
 
   const addTodo = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -51,8 +64,7 @@ export default function Home() {
           </Button>
         </Box>
         <Box p={2} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <TodoCard id="id1" />
-          <TodoCard id="id1" />
+          {todos && todos.map((todo) => <TodoCard key={todo.id} todo={todo} />)}
         </Box>
       </main>
     </>
