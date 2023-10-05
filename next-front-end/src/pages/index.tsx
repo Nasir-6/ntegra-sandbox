@@ -27,8 +27,15 @@ export default function Home() {
 
   const addTodo = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const res = await fetch("http://localhost:8787/api/todos");
-    console.log("res", res);
+    // Simple POST request with a JSON body using fetch
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ todo }),
+    };
+    fetch("http://localhost:8787/api/todos", requestOptions)
+      .then((response) => response.json())
+      .then((data) => setTodos([...todos, data]));
     console.log("todo", todo);
     setTodo("");
   };

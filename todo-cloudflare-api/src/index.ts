@@ -1,5 +1,5 @@
 import { Router, RouterType } from 'itty-router';
-import faunadb, { Collection, Documents, Get, Paginate, Ref, Query, Map, Index, Select } from 'faunadb';
+import faunadb, { Collection, Documents, Get, Paginate, Ref, Query, Map, Index, Select, Create, Let, Var } from 'faunadb';
 
 export interface Env {
 	FAUNADB_SECRET?: string;
@@ -48,10 +48,44 @@ function buildRouter(env: Env): RouterType {
 		});
 	});
 
-	// 404 for everything else
-	router.all('*', () => new Response('Not Found.', { status: 404 }));
+	router.post('/api/todos', async (request, env) => {
+		console.log('POSTING');
+		const content = await request.json();
+		const resObj = await faunaClient.query(addTodo(content.todo));
+		const newTodoObj = {
+			id: resObj.ref.id,
+			todo: resObj.data.todo,
+			isDone: resObj.data.isDone,
+		};
+		return new Response(JSON.stringify(newTodoObj), {
+			headers: {
+				'Content-type': 'application/json',
+				...corsHeaders,
+			},
+		});
+	});
+
+	// Deal with Cors and 404 for everything else
+	router.all('*', (request) => {
+		if (request.method === 'OPTIONS') {
+			return new Response('OK', {
+				headers: corsHeaders,
+			});
+		} else {
+			return new Response('Not Found.', { status: 404 });
+		}
+	});
 
 	return router;
+}
+
+function addTodo(todo) {
+	return Create(Collection('todos'), {
+		data: {
+			todo,
+			isDone: false,
+		},
+	});
 }
 
 function getAllTodos() {
