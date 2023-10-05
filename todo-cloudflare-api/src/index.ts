@@ -39,15 +39,7 @@ function buildRouter(env: Env): RouterType {
 	});
 
 	router.get('/api/todos', async (request, env) => {
-		const dbQuery = await faunaClient.query(
-			Map(Paginate(Documents(Collection('todos'))), (ref) => {
-				return {
-					id: Select(['ref', 'id'], Get(ref)),
-					todo: Select(['data', 'todo'], Get(ref)),
-					isDone: Select(['data', 'isDone'], Get(ref)),
-				};
-			})
-		);
+		const dbQuery = await faunaClient.query(getAllTodos());
 		return new Response(JSON.stringify(dbQuery), {
 			headers: {
 				'Content-type': 'application/json',
@@ -60,4 +52,14 @@ function buildRouter(env: Env): RouterType {
 	router.all('*', () => new Response('Not Found.', { status: 404 }));
 
 	return router;
+}
+
+function getAllTodos() {
+	return Map(Paginate(Documents(Collection('todos'))), (ref) => {
+		return {
+			id: Select(['ref', 'id'], Get(ref)),
+			todo: Select(['data', 'todo'], Get(ref)),
+			isDone: Select(['data', 'isDone'], Get(ref)),
+		};
+	});
 }
