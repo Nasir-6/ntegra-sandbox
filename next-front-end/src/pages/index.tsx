@@ -71,7 +71,10 @@ export default function Home() {
           </Button>
         </Box>
         <Box p={2} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          {todos && todos.map((todo) => <TodoCard key={todo.id} todo={todo} />)}
+          {todos &&
+            todos.map((todo) => (
+              <TodoCard key={todo.id} todo={todo} setTodos={setTodos} />
+            ))}
         </Box>
       </main>
     </>

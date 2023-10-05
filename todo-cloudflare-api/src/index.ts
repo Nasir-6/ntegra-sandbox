@@ -1,5 +1,5 @@
 import { Router, RouterType } from 'itty-router';
-import faunadb, { Collection, Documents, Get, Paginate, Ref, Query, Map, Index, Select, Create, Let, Var } from 'faunadb';
+import faunadb, { Collection, Documents, Get, Paginate, Ref, Query, Map, Index, Select, Create, Let, Var, Delete } from 'faunadb';
 
 export interface Env {
 	FAUNADB_SECRET?: string;
@@ -8,7 +8,7 @@ export interface Env {
 
 const corsHeaders = {
 	'Access-Control-Allow-Headers': '*', // What headers are allowed. * is wildcard. Instead of using '*', you can specify a list of specific headers that are allowed, such as: Access-Control-Allow-Headers: X-Requested-With, Content-Type, Accept, Authorization.
-	'Access-Control-Allow-Methods': 'POST', // Allowed methods. Others could be GET, PUT, DELETE etc.
+	'Access-Control-Allow-Methods': '*', // Allowed methods. Others could be GET, PUT, DELETE etc.
 	'Access-Control-Allow-Origin': '*', // This is URLs that are allowed to access the server. * is the wildcard character meaning any URL can.
 };
 
@@ -58,6 +58,26 @@ function buildRouter(env: Env): RouterType {
 			isDone: resObj.data.isDone,
 		};
 		return new Response(JSON.stringify(newTodoObj), {
+			headers: {
+				'Content-type': 'application/json',
+				...corsHeaders,
+			},
+		});
+	});
+
+	router.delete('/api/todos/:id', async ({ params }) => {
+		console.log(params.id);
+
+		// const resObj = await faunaClient.query(addTodo(content.todo));
+		// const newTodoObj = {
+		// 	id: resObj.ref.id,
+		// 	todo: resObj.data.todo,
+		// 	isDone: resObj.data.isDone,
+		// };
+
+		const resObj = await faunaClient.query(Delete(Ref(Collection('todos'), params.id)));
+		console.log('resObj.ref.id', resObj.ref.id);
+		return new Response(JSON.stringify(resObj.ref.id), {
 			headers: {
 				'Content-type': 'application/json',
 				...corsHeaders,
