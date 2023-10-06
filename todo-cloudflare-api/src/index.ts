@@ -54,8 +54,7 @@ function buildRouter(env: Env): RouterType {
 		const resObj = await faunaClient.query(addTodo(content.todo));
 		const newTodoObj = {
 			id: resObj.ref.id,
-			todo: resObj.data.todo,
-			isDone: resObj.data.isDone,
+			...resObj.data,
 		};
 		return new Response(JSON.stringify(newTodoObj), {
 			headers: {
@@ -67,13 +66,6 @@ function buildRouter(env: Env): RouterType {
 
 	router.delete('/api/todos/:id', async ({ params }) => {
 		console.log(params.id);
-
-		// const resObj = await faunaClient.query(addTodo(content.todo));
-		// const newTodoObj = {
-		// 	id: resObj.ref.id,
-		// 	todo: resObj.data.todo,
-		// 	isDone: resObj.data.isDone,
-		// };
 
 		const resObj = await faunaClient.query(Delete(Ref(Collection('todos'), params.id)));
 		console.log('resObj.ref.id', resObj.ref.id);
